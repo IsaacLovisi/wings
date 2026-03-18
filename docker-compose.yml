@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app # Sincroniza o código local com o container (Hot Reloading)
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: ankane/pgvector:latest # Imagem do Postgres já com suporte a IA
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Is44c@Db1909}
+      POSTGRES_DB: ${POSTGRES_DB:-wings_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
